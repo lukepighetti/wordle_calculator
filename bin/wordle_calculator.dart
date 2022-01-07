@@ -39,8 +39,8 @@ void main(List<String> arguments) async {
   final known = knownLetters.toList();
 
   if (known.isNotEmpty) {
-    dictionary.retainWhere((it) => it.toList().containsAny(known));
-    print('Reduced to ${dictionary.length} words by allowing $known');
+    dictionary.retainWhere((it) => it.toList().containsAll(known));
+    print('Reduced to ${dictionary.length} words by requiring $known');
   }
 
   /// 6. define positioned known letters, filter
@@ -59,7 +59,7 @@ void main(List<String> arguments) async {
     });
 
     print(
-        'Reduced to ${dictionary.length} words by allowing positioned $positioned');
+        'Reduced to ${dictionary.length} words by requiring positioned $positioned');
   }
 
   /// 7. Score all words
@@ -112,6 +112,7 @@ extension on String {
 
 extension ListExtensions<T> on List<T> {
   bool containsAny(List<T> needles) => needles.any((it) => contains(it));
+  bool containsAll(List<T> needles) => needles.every((it) => contains(it));
 
   List<T> safeSublist(int start, int end) {
     return sublist(start, min(length, end));
