@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:math';
 
 const deniedLetters = 'aisutbnhdfc';
-const knownLetters = 'r';
+const knownLetters = 'reo';
 const wrongPositionKnownLetters = <int, List<String>>{
   1: ['r'],
   2: ['r'],
