@@ -3,14 +3,21 @@ import 'dart:io';
 
 import 'dart:math';
 
-const deniedLetters = 'arienotc';
-const knownLetters = 'sulp';
+const deniedLetters = 'aisutbnhdfc';
+const knownLetters = 'r';
+const wrongPositionKnownLetters = <int, List<String>>{
+  1: ['r'],
+  2: ['r'],
+  3: [],
+  4: [],
+  5: [],
+};
 const positionedKnownLetters = {
-  1: 's',
-  2: null,
-  3: 'u',
+  1: null,
+  2: 'o',
+  3: 'r',
   4: null,
-  5: 'p',
+  5: 'e',
 };
 
 void main(List<String> arguments) async {
@@ -43,7 +50,24 @@ void main(List<String> arguments) async {
     print('Reduced to ${dictionary.length} words by requiring $known');
   }
 
-  /// 6. define positioned known letters, filter
+  /// 6. define wrong position known letters, filter
+  final wrongPositionKnown = wrongPositionKnownLetters;
+
+  if (wrongPositionKnown.values.flattened.isNotEmpty) {
+    for (final entry in wrongPositionKnown.entries) {
+      final position = entry.key;
+      final letters = entry.value;
+
+      for (final letter in letters) {
+        final index = position - 1;
+        dictionary.retainWhere((it) => !it.containsAtIndex(letter, index));
+      }
+    }
+    print(
+        'Reduced to ${dictionary.length} words by denying wrongly positioned $wrongPositionKnown');
+  }
+
+  /// 7. define positioned known letters, filter
   final positioned = positionedKnownLetters.withoutNullValues;
 
   if (positioned.isNotEmpty) {
@@ -62,7 +86,7 @@ void main(List<String> arguments) async {
         'Reduced to ${dictionary.length} words by requiring positioned $positioned');
   }
 
-  /// 7. Score all words
+  /// 8. Score all words
   assert(scoreWord('aabc', {'a': 0.1, 'b': 0.2, 'c': 0.3}).isAlmost(0.6));
   final scoredWords = scoreWords(dictionary, frequency);
   final sortedScoredWords = scoredWords.entries.toList()
@@ -134,4 +158,8 @@ extension on Iterable<MapEntry<String, double>> {
 extension MapExtensions<K, V> on Map<K, V?> {
   Map<K, V> get withoutNullValues =>
       Map<K, V>.from(<K, V?>{...this}..removeWhere((k, v) => v == null));
+}
+
+extension IterableIterableX<T> on Iterable<Iterable<T>> {
+  List<T> get flattened => fold([], (a, b) => [...a, ...b]);
 }
