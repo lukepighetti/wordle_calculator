@@ -51,7 +51,7 @@ void main(List<String> arguments) async {
   }
 
   /// 6. define wrong position known letters, filter
-  final wrongPositionKnown = wrongPositionKnownLetters;
+  final wrongPositionKnown = wrongPositionKnownLetters.withoutEmptyValues;
 
   if (wrongPositionKnown.values.flattened.isNotEmpty) {
     for (final entry in wrongPositionKnown.entries) {
@@ -162,4 +162,9 @@ extension MapExtensions<K, V> on Map<K, V?> {
 
 extension IterableIterableX<T> on Iterable<Iterable<T>> {
   List<T> get flattened => fold([], (a, b) => [...a, ...b]);
+}
+
+extension MapIterableX<K, V> on Map<K, Iterable<V>> {
+  Map<K, List<V>> get withoutEmptyValues =>
+      Map.from(this)..removeWhere((k, v) => v.isEmpty);
 }
