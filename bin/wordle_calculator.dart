@@ -20,6 +20,7 @@ const positionedKnownLetters = {
   5: 'e',
 };
 
+// TODO: handle double letters
 void main(List<String> arguments) async {
   /// 1. load dictionary
   final dictionary = await File('assets/dictionary.txt').readAsLines();

@@ -4,3 +4,7 @@
 
 # Conventional directory for build output.
 build/
+
+# Project specific
+.local-chromium
+screenshot-*.png
